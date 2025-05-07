@@ -55,7 +55,7 @@ public class UsuarioDAOImplementation implements IUsuarioDAO {
     }
 
     @Override
-    public Result GetUsuarioDireccionById(int IdUsuario) {
+    public Result GetAllById(int IdUsuario) {
         Result result = new Result();
         try {
             UsuarioDireccion usuarioDireccion = new UsuarioDireccion();
@@ -85,7 +85,7 @@ public class UsuarioDAOImplementation implements IUsuarioDAO {
     }
 
     @Override
-    public Result GetUsuarioById(int IdUsuario) {
+    public Result GetById(int IdUsuario) {
         Result result = new Result();
         try {
             UsuarioDireccion usuarioDireccion = new UsuarioDireccion();
@@ -103,7 +103,7 @@ public class UsuarioDAOImplementation implements IUsuarioDAO {
 
     @Transactional
     @Override
-    public Result AddUsuario(UsuarioDireccion usuarioDireccion) {
+    public Result Add(UsuarioDireccion usuarioDireccion) {
         Result result = new Result();
         try {
             entityManager.persist(usuarioDireccion.Usuario);
@@ -123,7 +123,7 @@ public class UsuarioDAOImplementation implements IUsuarioDAO {
 
     @Transactional
     @Override
-    public Result UsuarioUpdate(Usuario usuario) {
+    public Result Update(Usuario usuario) {
         Result result = new Result();
         try {
             entityManager.merge(usuario);
@@ -138,7 +138,7 @@ public class UsuarioDAOImplementation implements IUsuarioDAO {
 
     @Transactional
     @Override
-    public Result DeleteUsuarioDireccion(int IdUsuario) {
+    public Result Delete(int IdUsuario) {
         Result result = new Result();
 
         try {

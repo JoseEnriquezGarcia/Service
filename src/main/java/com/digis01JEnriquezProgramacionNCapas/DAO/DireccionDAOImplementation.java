@@ -18,7 +18,7 @@ public class DireccionDAOImplementation implements IDireccionDAO{
     private EntityManager entityManager;
 
     @Override
-    public Result GetDireccionByIdDireccion(int IdDireccion) {
+    public Result GetById(int IdDireccion) {
         Result result = new Result();
         
         try {
@@ -37,7 +37,7 @@ public class DireccionDAOImplementation implements IDireccionDAO{
     
     @Transactional
     @Override
-    public Result DireccionAdd(UsuarioDireccion usuarioDireccion) {
+    public Result Add(UsuarioDireccion usuarioDireccion) {
         Result result = new Result();
         
         try {
@@ -54,7 +54,7 @@ public class DireccionDAOImplementation implements IDireccionDAO{
     
     @Transactional
     @Override
-    public Result DireccionUpdate(Direccion direccion) {
+    public Result Update(Direccion direccion) {
         Result result  = new Result ();
         
         try {
@@ -74,7 +74,7 @@ public class DireccionDAOImplementation implements IDireccionDAO{
     
     @Transactional
     @Override
-    public Result DireccionDelete(int IdDireccion) {
+    public Result Delete(int IdDireccion) {
         Result result = new Result();
         
         try {

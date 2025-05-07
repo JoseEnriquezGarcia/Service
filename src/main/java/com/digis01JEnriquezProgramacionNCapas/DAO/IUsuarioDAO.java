@@ -7,11 +7,11 @@ import com.digis01JEnriquezProgramacionNCapas.JPA.UsuarioDireccion;
 
 public interface IUsuarioDAO { 
     Result GetAll();
-    Result GetUsuarioDireccionById(int IdUsuario);
-    Result GetUsuarioById(int IdUsuario);
-    Result AddUsuario(UsuarioDireccion usuarioDireccion);
-    Result UsuarioUpdate(Usuario usuario);
-    Result DeleteUsuarioDireccion(int IdUsuario);
+    Result GetAllById(int IdUsuario);
+    Result GetById(int IdUsuario);
+    Result Add(UsuarioDireccion usuarioDireccion);
+    Result Update(Usuario usuario);
+    Result Delete(int IdUsuario);
     Result UpdateStatus(int IdUsuario, int Status);
     Result GetAllDinamico(Usuario usuario);
 }

@@ -5,8 +5,8 @@ import com.digis01JEnriquezProgramacionNCapas.JPA.Result;
 import com.digis01JEnriquezProgramacionNCapas.JPA.UsuarioDireccion;
 
 public interface IDireccionDAO {
-    Result GetDireccionByIdDireccion(int IdDireccion);
-    Result DireccionAdd(UsuarioDireccion usuarioDireccion);
-    Result DireccionUpdate(Direccion direccion);
-    Result DireccionDelete(int IdDireccion);
+    Result GetById(int IdDireccion);
+    Result Add(UsuarioDireccion usuarioDireccion);
+    Result Update(Direccion direccion);
+    Result Delete(int IdDireccion);
 }

@@ -24,7 +24,7 @@ public class DireccionController {
 
     @GetMapping("getById/{IdDireccion}")
     public ResponseEntity GetById(@PathVariable int IdDireccion) {
-        Result result = direccionDAOImplementation.GetDireccionByIdDireccion(IdDireccion);
+        Result result = direccionDAOImplementation.GetById(IdDireccion);
 
         if (result.correct == true) {
             if (result.object == null) {
@@ -39,10 +39,10 @@ public class DireccionController {
 
     @PostMapping("add")
     public ResponseEntity Add(@RequestBody UsuarioDireccion usuarioDireccion) {
-        Result result = direccionDAOImplementation.DireccionAdd(usuarioDireccion);
+        Result result = direccionDAOImplementation.Add(usuarioDireccion);
 
         if (result.correct) {
-            return ResponseEntity.status(201).body("Agregado Correctamente");
+            return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.badRequest().body(result.errorMessage);
         }
@@ -50,10 +50,10 @@ public class DireccionController {
 
     @PatchMapping("update")
     public ResponseEntity Update(@RequestBody Direccion direccion) {
-        Result result = direccionDAOImplementation.DireccionUpdate(direccion);
+        Result result = direccionDAOImplementation.Update(direccion);
 
         if (result.correct) {
-            return ResponseEntity.status(201).body("Actualizado Correctamente");
+            return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.badRequest().body(result.errorMessage);
         }
@@ -61,10 +61,10 @@ public class DireccionController {
 
     @DeleteMapping("delete/{IdDireccion}")
     public ResponseEntity Delete(@PathVariable int IdDireccion) {
-        Result result = direccionDAOImplementation.DireccionDelete(IdDireccion);
+        Result result = direccionDAOImplementation.Delete(IdDireccion);
 
         if (result.correct) {
-            return ResponseEntity.ok("Eliminado Correctamente");
+            return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.badRequest().body(result.errorMessage);
         }

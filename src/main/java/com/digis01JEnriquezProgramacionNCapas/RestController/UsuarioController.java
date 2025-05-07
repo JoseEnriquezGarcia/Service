@@ -29,9 +29,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,7 +59,7 @@ public class UsuarioController {
 
     @GetMapping("getAllById/{IdUsuario}")
     public ResponseEntity GetAllById(@PathVariable int IdUsuario) {
-        Result result = usuarioDAOImplementation.GetUsuarioDireccionById(IdUsuario);
+        Result result = usuarioDAOImplementation.GetAllById(IdUsuario);
 
         if (result.correct == true) {
             if (result.object == null) {
@@ -74,7 +74,7 @@ public class UsuarioController {
 
     @GetMapping("getById/{IdUsuario}")
     public ResponseEntity GetById(@PathVariable int IdUsuario) {
-        Result result = usuarioDAOImplementation.GetUsuarioById(IdUsuario);
+        Result result = usuarioDAOImplementation.GetById(IdUsuario);
 
         if (result.correct == true) {
             if (result.object == null) {
@@ -89,10 +89,10 @@ public class UsuarioController {
 
     @PostMapping("add")
     public ResponseEntity Add(@RequestBody UsuarioDireccion usuarioDireccion) {
-        Result result = usuarioDAOImplementation.AddUsuario(usuarioDireccion);
+        Result result = usuarioDAOImplementation.Add(usuarioDireccion);
 
         if (result.correct == true) {
-            return ResponseEntity.status(201).body("Agregado Correctamente");
+            return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.badRequest().body(result.errorMessage);
         }
@@ -100,10 +100,10 @@ public class UsuarioController {
 
     @PutMapping("update")
     public ResponseEntity Update(@RequestBody Usuario usuario) {
-        Result result = usuarioDAOImplementation.UsuarioUpdate(usuario);
+        Result result = usuarioDAOImplementation.Update(usuario);
 
         if (result.correct == true) {
-            return ResponseEntity.status(201).body("Actualizado Correctamente");
+            return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.badRequest().body(result.errorMessage);
         }
@@ -114,7 +114,7 @@ public class UsuarioController {
         Result result = usuarioDAOImplementation.UpdateStatus(IdUsuario, Status);
 
         if (result.correct == true) {
-            return ResponseEntity.ok().body("Actualizado Correctamente");
+            return ResponseEntity.ok().body(result);
         } else {
             return ResponseEntity.badRequest().body(result.errorMessage);
         }
@@ -122,10 +122,10 @@ public class UsuarioController {
 
     @DeleteMapping("delete/{IdUsuario}")
     public ResponseEntity Delete(@PathVariable int IdUsuario) {
-        Result result = usuarioDAOImplementation.DeleteUsuarioDireccion(IdUsuario);
+        Result result = usuarioDAOImplementation.Delete(IdUsuario);
 
         if (result.correct == true) {
-            return ResponseEntity.ok("Eliminado Correctamente");
+            return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.badRequest().body(result.errorMessage);
         }
@@ -146,11 +146,11 @@ public class UsuarioController {
     }
 
     @PostMapping("cargaMasiva")
-    public ResponseEntity CargaMasiva(@RequestParam MultipartFile archivo) {
+    public ResponseEntity CargaMasiva(@RequestPart("archivo") MultipartFile archivo) {
         try {
             if (archivo != null && !archivo.isEmpty()) {
                 
-                ResultFile resultFile = new ResultFile();
+                Result result = new Result();
                 
                 String tipoArchivo = archivo.getOriginalFilename().split("\\.")[1];
                 
@@ -160,7 +160,7 @@ public class UsuarioController {
                 String absolutePath = root + "/" + path + "/" + fecha + archivo.getOriginalFilename();
                 archivo.transferTo(new File(absolutePath));
                 
-                resultFile.setArchivo(absolutePath);
+                
                 
                 //Leer el archivo
                 List<UsuarioDireccion> listaUsuarios = new ArrayList();
@@ -176,8 +176,8 @@ public class UsuarioController {
                 
                 if (listaErrores.isEmpty()) {
                     //Procesa el archivo
-                    
-                    return ResponseEntity.ok(resultFile);
+                    result.object = absolutePath;
+                    return ResponseEntity.ok(result);
                 } else {
                     return ResponseEntity.noContent().build();
 //                    model.addAttribute("listaErrores", listaErrores);
@@ -342,4 +342,23 @@ public class UsuarioController {
         }
         return listaErrores;
     }
+        
+        //    @GetMapping("/Procesar")
+//    public String Procesar(HttpSession session) {
+//        String absolutePath = session.getAttribute("urlFile").toString();
+//        String tipoArchivo = session.getAttribute("urlFile").toString().split("\\.")[1];
+//        List<UsuarioDireccion> listaUsuarios = new ArrayList<>();
+//
+//        if (tipoArchivo.equals("txt")) {
+//             listaUsuarios = LecturaArchivoTXT(new File(absolutePath));
+//        }else{
+//            listaUsuarios = LecturaArchivoExcel(new File(absolutePath));
+//        }        
+//        
+//        for (UsuarioDireccion usuarioDireccion : listaUsuarios) {
+//            //usuarioDAOImplementation.Add(usuarioDireccion);
+//            usuarioDAOImplementation.AddJPA(usuarioDireccion);
+//        }
+//        return "CargaMasiva";
+//    }
 }
