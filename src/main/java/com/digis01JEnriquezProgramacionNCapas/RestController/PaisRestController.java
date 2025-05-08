@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/pais")
-public class PaisController {
+public class PaisRestController {
 
     @Autowired
     PaisDAOImplementation paisDAOImplementation;

@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/direccion")
-public class DireccionController {
+public class DireccionRestController {
 
     @Autowired
     DireccionDAOImplementation direccionDAOImplementation;
@@ -48,7 +49,7 @@ public class DireccionController {
         }
     }
 
-    @PatchMapping("update")
+    @PutMapping("update")
     public ResponseEntity Update(@RequestBody Direccion direccion) {
         Result result = direccionDAOImplementation.Update(direccion);
 

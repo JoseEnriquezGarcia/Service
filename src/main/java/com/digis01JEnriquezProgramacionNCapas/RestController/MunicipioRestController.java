@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/municipio")
-public class MunicipioController {
+public class MunicipioRestController {
 
     @Autowired
     MunicipioDAOImplementation municipioDAOImplementation;

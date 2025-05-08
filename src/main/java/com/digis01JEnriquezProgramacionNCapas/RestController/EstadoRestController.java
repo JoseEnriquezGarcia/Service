@@ -1,23 +1,24 @@
 package com.digis01JEnriquezProgramacionNCapas.RestController;
 
-import com.digis01JEnriquezProgramacionNCapas.DAO.RolDAOImplementation;
+import com.digis01JEnriquezProgramacionNCapas.DAO.EstadoDAOImplementation;
 import com.digis01JEnriquezProgramacionNCapas.JPA.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/rol")
-public class RolController {
+@RequestMapping("/estado")
+public class EstadoRestController {
 
     @Autowired
-    RolDAOImplementation rolDAOImplementation;
+    EstadoDAOImplementation estadoDAOImplementation;
 
-    @GetMapping("getAll")
-    public ResponseEntity GetAll() {
-        Result result = rolDAOImplementation.GetAll();
+    @GetMapping("byIdPais/{IdPais}")
+    public ResponseEntity GetByIdPais(@PathVariable int IdPais) {
+        Result result = estadoDAOImplementation.EstadoByIdPais(IdPais);
 
         if (result.correct == true) {
             if (result.objects.isEmpty()) {
