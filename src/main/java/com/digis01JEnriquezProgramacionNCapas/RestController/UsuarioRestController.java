@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -131,9 +132,32 @@ public class UsuarioRestController {
         }
     }
 
+//    @PostMapping("getAllDinamico")
+//    public ResponseEntity GetAllDinamico(@RequestBody Usuario usuario) {
+//        Result result = usuarioDAOImplementation.GetAllDinamico(usuario);
+//        if (result.correct == true) {
+//            if (result.objects.isEmpty()) {
+//                return ResponseEntity.noContent().build();
+//            } else {
+//                return ResponseEntity.ok(result);
+//            }
+//        } else {
+//            return ResponseEntity.internalServerError().body(result.errorMessage);
+//        }
+//    }
+    
+    
     @PostMapping("getAllDinamico")
     public ResponseEntity GetAllDinamico(@RequestBody Usuario usuario) {
-        Result result = usuarioDAOImplementation.GetAllDinamico(usuario);
+        Result result = usuarioDAOImplementation.GetAll();
+        
+        List<UsuarioDireccion> usuarios = new ArrayList<>();
+        
+        usuarios = result.objects.stream()
+                .map(u -> (UsuarioDireccion) u)
+                .filter(u -> u.Usuario.getNombre().equals(usuario.getNombre()))
+                .collect(Collectors.toList());
+        
         if (result.correct == true) {
             if (result.objects.isEmpty()) {
                 return ResponseEntity.noContent().build();
