@@ -150,10 +150,11 @@ public class UsuarioRestController {
     @PostMapping("getAllDinamico")
     public ResponseEntity GetAllDinamico(@RequestBody Usuario usuario) {
         Result result = usuarioDAOImplementation.GetAll();
+        Result usuariosStream = new Result();
         
-        List<UsuarioDireccion> usuarios = new ArrayList<>();
+        usuariosStream.objects = new ArrayList<>();
         
-        usuarios = result.objects.stream()
+        usuariosStream.objects = result.objects.stream()
                 .map(u -> (UsuarioDireccion) u)
                 .filter(u -> u.Usuario.getNombre().equals(usuario.getNombre()))
                 .collect(Collectors.toList());
