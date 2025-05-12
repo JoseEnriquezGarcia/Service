@@ -146,19 +146,33 @@ public class UsuarioRestController {
 //        }
 //    }
     
-    
+    //Java Streams
     @PostMapping("getAllDinamico")
     public ResponseEntity GetAllDinamico(@RequestBody Usuario usuario) {
         Result result = usuarioDAOImplementation.GetAll();
-        Result usuariosStream = new Result();
-        
-        usuariosStream.objects = new ArrayList<>();
-        
-        usuariosStream.objects = result.objects.stream()
+
+        result.objects = result.objects.stream()
                 .map(u -> (UsuarioDireccion) u)
-                .filter(u -> u.Usuario.getNombre().equals(usuario.getNombre()))
+                .filter(u
+                        -> u.Usuario.getNombre().toLowerCase().contains(usuario.getNombre().toLowerCase())
+                || u.Usuario.getApellidoPaterno().toLowerCase().contains(usuario.getApellidoPaterno().toLowerCase())
+                || u.Usuario.getApellidoPaterno().toLowerCase().contains(usuario.getApellidoMaterno().toLowerCase())
+                )
                 .collect(Collectors.toList());
+        if(usuario.getStatus() != null){
+        result.objects = result.objects.stream()
+                .map(u -> (UsuarioDireccion) u)
+                .filter(u -> u.Usuario.getStatus() == (usuario.getStatus()))
+                .collect(Collectors.toList());
+        }
         
+        if (usuario.Rol.getIdRol() != null && usuario.Rol.getIdRol() != 0) {
+            result.objects = result.objects.stream()
+                    .map(u -> (UsuarioDireccion) u)
+                    .filter(u -> u.Usuario.Rol.getIdRol() == (usuario.Rol.getIdRol()))
+                    .collect(Collectors.toList());
+        }
+
         if (result.correct == true) {
             if (result.objects.isEmpty()) {
                 return ResponseEntity.noContent().build();
@@ -169,6 +183,8 @@ public class UsuarioRestController {
             return ResponseEntity.internalServerError().body(result.errorMessage);
         }
     }
+    
+    @GetMapping 
 
     @PostMapping("cargaMasiva")
     public ResponseEntity CargaMasiva(@RequestParam("archivo") MultipartFile archivo) {
@@ -226,7 +242,7 @@ public class UsuarioRestController {
         try {
             //String[] tipoArchivo = absolutePath.split[2]
             //tipoArchivo.lenght
-            
+
             String tipoArchivo = absolutePath.split("\\.")[2];
 
             List<UsuarioDireccion> listaUsuarios = new ArrayList<>();

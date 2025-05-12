@@ -12,16 +12,16 @@ public class Rol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idrol")
-    private int IdRol;
+    private Integer IdRol;
     
     @Column(name = "nombre")
     private String Nombre;
     
-    public int getIdRol(){
+    public Integer getIdRol(){
         return IdRol;
     }
     
-    public void setIdRol(int IdRol){
+    public void setIdRol(Integer IdRol){
         this.IdRol = IdRol;
     }
     
