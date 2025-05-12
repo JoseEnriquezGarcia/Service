@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -184,7 +185,49 @@ public class UsuarioRestController {
         }
     }
     
-    @GetMapping 
+    @GetMapping("orden/{bandera}") 
+    public ResponseEntity Ordenar (@PathVariable int bandera){
+        Result result = usuarioDAOImplementation.GetAll();
+        
+        //NOMBRE
+        result.objects = result.objects.stream()
+                .map(u -> (UsuarioDireccion) u)
+                .sorted(Comparator.comparing(u -> u.Usuario.getNombre()))
+                .collect(Collectors.toList());
+        //APaterno
+        result.objects = result.objects.stream()
+                .map(u -> (UsuarioDireccion) u)
+                .sorted(Comparator.comparing(u -> u.Usuario.getApellidoPaterno()))
+                .collect(Collectors.toList());
+        
+        //AMaterno
+//        result.objects = result.objects.stream()
+//                .map(u -> (UsuarioDireccion) u)
+//                .sorted(Comparator.comparing(u -> u.Usuario.getApellidoMaterno()))
+//                .collect(Collectors.toList());
+        
+        //ROl
+//        result.objects = result.objects.stream()
+//                .map(u -> (UsuarioDireccion) u)
+//                .sorted(Comparator.comparingInt(u -> u.Usuario.Rol.getIdRol()))
+//                .collect(Collectors.toList());
+        
+         //Status
+//        result.objects = result.objects.stream()
+//                .map(u -> (UsuarioDireccion) u)
+//                .sorted(Comparator.comparingInt(u -> u.Usuario.getStatus()))
+//                .collect(Collectors.toList());
+
+        if(result.correct){
+         if(result.objects.isEmpty()){
+             return ResponseEntity.noContent().build();
+         }else{
+             return ResponseEntity.ok(result);
+         }   
+        }else{
+            return ResponseEntity.internalServerError().body(result.errorMessage);
+        }
+    }
 
     @PostMapping("cargaMasiva")
     public ResponseEntity CargaMasiva(@RequestParam("archivo") MultipartFile archivo) {
@@ -240,10 +283,8 @@ public class UsuarioRestController {
         Result result = new Result();
 
         try {
-            //String[] tipoArchivo = absolutePath.split[2]
-            //tipoArchivo.lenght
-
-            String tipoArchivo = absolutePath.split("\\.")[2];
+            String[] extension = absolutePath.split("\\.");
+            String tipoArchivo = extension[extension.length-1];
 
             List<UsuarioDireccion> listaUsuarios = new ArrayList<>();
 
