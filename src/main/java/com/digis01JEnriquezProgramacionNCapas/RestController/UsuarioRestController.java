@@ -189,16 +189,19 @@ public class UsuarioRestController {
     public ResponseEntity Ordenar (@PathVariable int bandera){
         Result result = usuarioDAOImplementation.GetAll();
         
+        if(bandera == 1){
         //NOMBRE
         result.objects = result.objects.stream()
                 .map(u -> (UsuarioDireccion) u)
                 .sorted(Comparator.comparing(u -> u.Usuario.getNombre()))
                 .collect(Collectors.toList());
+        }
+        
         //APaterno
-        result.objects = result.objects.stream()
-                .map(u -> (UsuarioDireccion) u)
-                .sorted(Comparator.comparing(u -> u.Usuario.getApellidoPaterno()))
-                .collect(Collectors.toList());
+//        result.objects = result.objects.stream()
+//                .map(u -> (UsuarioDireccion) u)
+//                .sorted(Comparator.comparing(u -> u.Usuario.getApellidoPaterno()))
+//                .collect(Collectors.toList());
         
         //AMaterno
 //        result.objects = result.objects.stream()
