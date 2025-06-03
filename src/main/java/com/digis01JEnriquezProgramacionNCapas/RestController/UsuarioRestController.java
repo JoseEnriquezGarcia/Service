@@ -8,6 +8,13 @@ import com.digis01JEnriquezProgramacionNCapas.JPA.ResultFile;
 import com.digis01JEnriquezProgramacionNCapas.JPA.Rol;
 import com.digis01JEnriquezProgramacionNCapas.JPA.Usuario;
 import com.digis01JEnriquezProgramacionNCapas.JPA.UsuarioDireccion;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -43,6 +50,30 @@ public class UsuarioRestController {
     @Autowired
     UsuarioDAOImplementation usuarioDAOImplementation;
 
+    @Operation(summary = "Obtiene todos los usuario", description = "Obtiene todos los usuarios con sus direcciones")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operación completada", content = {
+            @Content(
+                    schema = @Schema(implementation = UsuarioDireccion.class)
+            )
+        }),
+        @ApiResponse(responseCode = "204", description = "Usuarios no encontrados", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class),
+                    examples = {
+                        @ExampleObject(
+                                name = "Result error",
+                                summary = "Usuarios no encontrados"
+                        )
+                    }
+            )
+        }),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),})
+
     @GetMapping
     public ResponseEntity GetAll() {
         Result result = usuarioDAOImplementation.GetAll();
@@ -58,8 +89,26 @@ public class UsuarioRestController {
         }
     }
 
+    @Operation(summary = "Obtiene un usuario con su dirección por el IdUsuario", description = "Obtiene un usuario con sus direcciones referenciado por el IdUsuario")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operación completada", content = {
+            @Content(
+                    schema = @Schema(implementation = UsuarioDireccion.class)
+            )
+        }),
+        @ApiResponse(responseCode = "204", description = "Usuario no encontrado", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),})
+
     @GetMapping("getAllById/{IdUsuario}")
-    public ResponseEntity GetAllById(@PathVariable int IdUsuario) {
+    public ResponseEntity GetAllById(@Parameter(name = "IdUsuario", description = "Identificador del usuario", example = "1", required = true) @PathVariable int IdUsuario) {
         Result result = usuarioDAOImplementation.GetAllById(IdUsuario);
 
         if (result.correct == true) {
@@ -73,8 +122,26 @@ public class UsuarioRestController {
         }
     }
 
+    @Operation(summary = "Obtiene un usuario por su Id", description = "Obtiene un usuario referenciado por su Id")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operación completada", content = {
+            @Content(
+                    schema = @Schema(implementation = UsuarioDireccion.class)
+            )
+        }),
+        @ApiResponse(responseCode = "204", description = "Usuario no encontrado", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),})
+
     @GetMapping("getById/{IdUsuario}")
-    public ResponseEntity GetById(@PathVariable int IdUsuario) {
+    public ResponseEntity GetById(@Parameter(name = "IdUsuario", description = "Identificador del usuario", example = "1", required = true) @PathVariable int IdUsuario) {
         Result result = usuarioDAOImplementation.GetById(IdUsuario);
 
         if (result.correct == true) {
@@ -88,8 +155,22 @@ public class UsuarioRestController {
         }
     }
 
+    @Operation(summary = "Agregar a un nuevo usuario")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operación completada", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+        @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),})
+
     @PostMapping("add")
     public ResponseEntity Add(@RequestBody UsuarioDireccion usuarioDireccion) {
+
         usuarioDireccion.Usuario.setStatus(1);
         Result result = usuarioDAOImplementation.Add(usuarioDireccion);
 
@@ -100,6 +181,18 @@ public class UsuarioRestController {
         }
     }
 
+    @Operation(summary = "Editar a un usuario")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operación completada", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+        @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),})
     @PutMapping("update")
     public ResponseEntity Update(@RequestBody Usuario usuario) {
         Result result = usuarioDAOImplementation.Update(usuario);
@@ -111,6 +204,23 @@ public class UsuarioRestController {
         }
     }
 
+    @Operation(summary = "Actualizar status a un usuario",
+            parameters = {
+                @Parameter(name = "IdUsuario", description = "Identificador del usuario", example = "1", required = true),
+                @Parameter(name = "Status", description = "Status", example = "1 o 0", required = true)
+            })
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operación completada", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+        @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),})
+
     @PatchMapping("updateStatus/{IdUsuario}/{Status}")
     public ResponseEntity UpdateStatus(@PathVariable int IdUsuario, @PathVariable int Status) {
         Result result = usuarioDAOImplementation.UpdateStatus(IdUsuario, Status);
@@ -121,6 +231,19 @@ public class UsuarioRestController {
             return ResponseEntity.badRequest().body(result.errorMessage);
         }
     }
+
+    @Operation(summary = "Eliminar un usuario")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operación completada", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+        @ApiResponse(responseCode = "400", description = "Error interno del servidor", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),})
 
     @DeleteMapping("delete/{IdUsuario}")
     public ResponseEntity Delete(@PathVariable int IdUsuario) {
@@ -146,7 +269,24 @@ public class UsuarioRestController {
 //            return ResponseEntity.internalServerError().body(result.errorMessage);
 //        }
 //    }
-    
+    @Operation(summary = "Busqueda dinamica")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operación completada", content = {
+            @Content(
+                    schema = @Schema(implementation = UsuarioDireccion.class)
+            )
+        }),
+        @ApiResponse(responseCode = "204", description = "Sin resultados", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+    })
     //Java Streams
     @PostMapping("getAllDinamico")
     public ResponseEntity GetAllDinamico(@RequestBody Usuario usuario) {
@@ -160,13 +300,13 @@ public class UsuarioRestController {
                 || u.Usuario.getApellidoPaterno().toLowerCase().contains(usuario.getApellidoMaterno().toLowerCase())
                 )
                 .collect(Collectors.toList());
-        if(usuario.getStatus() != null){
-        result.objects = result.objects.stream()
-                .map(u -> (UsuarioDireccion) u)
-                .filter(u -> u.Usuario.getStatus() == (usuario.getStatus()))
-                .collect(Collectors.toList());
+        if (usuario.getStatus() != null) {
+            result.objects = result.objects.stream()
+                    .map(u -> (UsuarioDireccion) u)
+                    .filter(u -> u.Usuario.getStatus() == (usuario.getStatus()))
+                    .collect(Collectors.toList());
         }
-        
+
         if (usuario.Rol.getIdRol() != null && usuario.Rol.getIdRol() != 0) {
             result.objects = result.objects.stream()
                     .map(u -> (UsuarioDireccion) u)
@@ -185,49 +325,63 @@ public class UsuarioRestController {
         }
     }
     
-    @GetMapping("orden/{bandera}") 
-    public ResponseEntity Ordenar (@PathVariable int bandera){
+    @Operation(summary = "Ordenar")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operación completada", content = {
+            @Content(
+                    schema = @Schema(implementation = UsuarioDireccion.class)
+            )
+        }),
+        @ApiResponse(responseCode = "204", description = "Sin resultados", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+    })
+    @GetMapping("filtro/{bandera}")
+    public ResponseEntity Ordenar(@PathVariable int bandera) {
         Result result = usuarioDAOImplementation.GetAll();
-        
-        if(bandera == 1){
-        //NOMBRE
-        result.objects = result.objects.stream()
-                .map(u -> (UsuarioDireccion) u)
-                .sorted(Comparator.comparing(u -> u.Usuario.getNombre()))
-                .collect(Collectors.toList());
+
+        if (bandera == 1) {
+            //NOMBRE
+            result.objects = result.objects.stream()
+                    .map(u -> (UsuarioDireccion) u)
+                    .sorted(Comparator.comparing(u -> u.Usuario.getNombre()))
+                    .collect(Collectors.toList());
         }
-        
+
         //APaterno
 //        result.objects = result.objects.stream()
 //                .map(u -> (UsuarioDireccion) u)
 //                .sorted(Comparator.comparing(u -> u.Usuario.getApellidoPaterno()))
 //                .collect(Collectors.toList());
-        
         //AMaterno
 //        result.objects = result.objects.stream()
 //                .map(u -> (UsuarioDireccion) u)
 //                .sorted(Comparator.comparing(u -> u.Usuario.getApellidoMaterno()))
 //                .collect(Collectors.toList());
-        
         //ROl
 //        result.objects = result.objects.stream()
 //                .map(u -> (UsuarioDireccion) u)
 //                .sorted(Comparator.comparingInt(u -> u.Usuario.Rol.getIdRol()))
 //                .collect(Collectors.toList());
-        
-         //Status
+        //Status
 //        result.objects = result.objects.stream()
 //                .map(u -> (UsuarioDireccion) u)
 //                .sorted(Comparator.comparingInt(u -> u.Usuario.getStatus()))
 //                .collect(Collectors.toList());
-
-        if(result.correct){
-         if(result.objects.isEmpty()){
-             return ResponseEntity.noContent().build();
-         }else{
-             return ResponseEntity.ok(result);
-         }   
-        }else{
+        if (result.correct) {
+            if (result.objects.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.ok(result);
+            }
+        } else {
             return ResponseEntity.internalServerError().body(result.errorMessage);
         }
     }
@@ -287,7 +441,7 @@ public class UsuarioRestController {
 
         try {
             String[] extension = absolutePath.split("\\.");
-            String tipoArchivo = extension[extension.length-1];
+            String tipoArchivo = extension[extension.length - 1];
 
             List<UsuarioDireccion> listaUsuarios = new ArrayList<>();
 
