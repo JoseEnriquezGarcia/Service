@@ -1,5 +1,6 @@
 package com.digis01JEnriquezProgramacionNCapas.RestController;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,33 +14,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/demoapi")
 public class DemoRestController {
-
+    
+    @Hidden
     @GetMapping("saludo")
     public String Saludo(@RequestParam String nombre) {
         return "Hola mundo " + nombre;
     }
-
+    
+    @Hidden
     @GetMapping("suma/{numero1}/{numero2}")
     public ResponseEntity Suma(@PathVariable int numero1, @PathVariable int numero2) {
         int resultado = numero1 + numero2;
         
         return ResponseEntity.ok("El resultado es: " + String.valueOf(resultado));
     }
-
+    
+    @Hidden
     @GetMapping("resta/{numero1}/{numero2}")
     public ResponseEntity Resta(@PathVariable int numero1, @PathVariable int numero2) {
         int resultado = numero1 - numero2;
         
         return ResponseEntity.ok("El resultado de la Resta es: " + String.valueOf(resultado));
     }
-
+    
+    @Hidden
     @GetMapping("multiplicacion/{numero1}/{numero2}")
     public ResponseEntity Multiplicacion(@PathVariable int numero1, @PathVariable int numero2) {
         int resultado = numero1 * numero2;
         
         return ResponseEntity.ok("El resultado de la Multiplicacion es: " + String.valueOf(resultado));
     }
-
+    
+    @Hidden
     @GetMapping("division/{numero1}/{numero2}")
     public ResponseEntity Division(@PathVariable int numero1, @PathVariable int numero2) {
         if (numero1 == 0 || numero2 == 0) {
@@ -50,6 +56,7 @@ public class DemoRestController {
         }
     }
     
+    @Hidden
     @PostMapping("suma2")
     public ResponseEntity Suma2(@RequestBody List<Integer> numeros){
         int suma = 0;

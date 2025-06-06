@@ -64,6 +64,7 @@ public class UsuarioRestController {
                         @ExampleObject(
                                 name = "Result error",
                                 summary = "Usuarios no encontrados"
+                                
                         )
                     }
             )
@@ -166,7 +167,8 @@ public class UsuarioRestController {
             @Content(
                     schema = @Schema(implementation = Result.class)
             )
-        }),})
+        }),
+    })
 
     @PostMapping("add")
     public ResponseEntity Add(@RequestBody UsuarioDireccion usuarioDireccion) {
@@ -232,7 +234,7 @@ public class UsuarioRestController {
         }
     }
 
-    @Operation(summary = "Eliminar un usuario")
+    @Operation(summary = "Eliminar un usuario", description = "Eliminar a un usuario con sus direcciones")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Operación completada", content = {
             @Content(
@@ -246,7 +248,7 @@ public class UsuarioRestController {
         }),})
 
     @DeleteMapping("delete/{IdUsuario}")
-    public ResponseEntity Delete(@PathVariable int IdUsuario) {
+    public ResponseEntity Delete(@Parameter(name = "IdUsuario", description = "Identificador del usuario", example = "1", required = true) @PathVariable int IdUsuario) {
         Result result = usuarioDAOImplementation.Delete(IdUsuario);
 
         if (result.correct == true) {
@@ -269,7 +271,7 @@ public class UsuarioRestController {
 //            return ResponseEntity.internalServerError().body(result.errorMessage);
 //        }
 //    }
-    @Operation(summary = "Busqueda dinamica")
+    @Operation(summary = "Busqueda dinamica", description = "Realiza una busqueda por Nombre, Apellido Paterno, Apellido Materno, Rol y Status")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Operación completada", content = {
             @Content(
@@ -325,7 +327,7 @@ public class UsuarioRestController {
         }
     }
     
-    @Operation(summary = "Ordenar")
+    @Operation(summary = "Ordenar", description = "Aplica aun filtro para ordenar por Nombre, Apellido Paterno, Apellido Matermo, Rol y Status")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Operación completada", content = {
             @Content(
@@ -344,7 +346,7 @@ public class UsuarioRestController {
         }),
     })
     @GetMapping("filtro/{bandera}")
-    public ResponseEntity Ordenar(@PathVariable int bandera) {
+    public ResponseEntity Ordenar(@Parameter(name = "Filtro", description = "Seleccionar el filtro", example = "Del 1 al 4", required = true)@PathVariable int bandera) {
         Result result = usuarioDAOImplementation.GetAll();
 
         if (bandera == 1) {
@@ -385,7 +387,25 @@ public class UsuarioRestController {
             return ResponseEntity.internalServerError().body(result.errorMessage);
         }
     }
-
+    
+    @Operation(summary = "Carga Masiva sube un archivo", description = "Proporciona un archivo en texto plano, con el siguiente formato Nombre|APaternp|AMaterno o un excel para insertar usuarios")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operación completada", content = {
+            @Content(
+                    schema = @Schema(implementation = UsuarioDireccion.class)
+            )
+        }),
+        @ApiResponse(responseCode = "204", description = "Sin resultados", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+    })
     @PostMapping("cargaMasiva")
     public ResponseEntity CargaMasiva(@RequestParam("archivo") MultipartFile archivo) {
 
@@ -434,7 +454,25 @@ public class UsuarioRestController {
         }
 
     }
-
+    
+    @Operation(summary = "Carga Masiva Procesa el archivo que se cargo en cargaMasiva", description = "Inserta todos los usuarios que contenga el archivo")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operación completada", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+        @ApiResponse(responseCode = "204", description = "Sin resultados", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {
+            @Content(
+                    schema = @Schema(implementation = Result.class)
+            )
+        }),
+    })
     @PostMapping("cargaMasiva/procesar")
     public ResponseEntity Procesar(@RequestBody String absolutePath) {
         Result result = new Result();
