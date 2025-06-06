@@ -169,9 +169,27 @@ public class UsuarioRestController {
             )
         }),
     })
-
+    
     @PostMapping("add")
-    public ResponseEntity Add(@RequestBody UsuarioDireccion usuarioDireccion) {
+    public ResponseEntity Add(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+    description = "Book to create", required = true,
+    content = @Content(mediaType = "application/json",
+      schema = @Schema(implementation = UsuarioDireccion.class),
+      examples = @ExampleObject(value = "{ \"Username\": \"Alger002\","
+              + " \"Nombre\": \"Jose\","
+              + " \"ApellidoPaterno\": \"Enriquez\","
+              + " \"ApellidoMaterno\": \"Garcia\","
+              + " \"Email\": \"jose456enriquez@gmail.com\","
+              + " \"Password\": \"12345\","
+              + "\"FechaNacimiento\": \"06-03-2003\","
+              + "\"Sexo\": \"M\","
+              + "\"Telefono\": \"5587979660\","
+              + "\"Celular\": \"55878978545\","
+              + "\"CURP\": \"EIGJ030306HMCNRSA9\","
+              + "\"Imagen\": \"null\","
+              + "\"Status\": \"1\","
+              + "\"IdRol\": \"3\"},"
+              + "\"Direccion\": { \"Username\": \"Alger002\","))) @RequestBody UsuarioDireccion usuarioDireccion) {
 
         usuarioDireccion.Usuario.setStatus(1);
         Result result = usuarioDAOImplementation.Add(usuarioDireccion);
